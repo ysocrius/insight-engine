@@ -1,0 +1,65 @@
+# Node / frontend
+node_modules/
+frontend/node_modules/
+frontend/dist/
+
+# Python / backend
+__pycache__/
+*.pyc
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Environment files and secrets
+# IMPORTANT: Never commit files containing actual secrets/credentials
+.env
+.env.local
+.env.*.local
+.env.development
+.env.production
+.env.test
+frontend/.env
+frontend/.env.local
+frontend/.env.*.local
+frontend/.env.development
+frontend/.env.production
+frontend/.env.test
+
+# Allow example/sample env files (templates without secrets)
+!.env.sample
+!.env.example
+!frontend/.env.example
+
+# Secret keys and tokens
+*.pem
+*.key
+*.crt
+*.p12
+secrets/
+.secrets/
+
+# Playwright outputs
+frontend/test-results/
+frontend/playwright-report/
+
+# Logs
+*.log
+
+# Virtual Environment
+venv/
+_archived_files/
+tests/
+docs/
+md files/
+log_watch/
+diag/
+data/
+test_data/
+
+# Frontend build artifacts
+frontend/vite.config.js.timestamp-*
+frontend/.env.local
+frontend/.env

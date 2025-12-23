@@ -1,0 +1,31 @@
+fastapi
+uvicorn
+pydub
+faster-whisper
+requests 
+openai
+
+vosk 
+
+python-dotenv 
+
+pytest 
+
+# Added for form parsing and MIME sniffing
+python-multipart
+python-magic-bin; platform_system == "Windows"
+python-magic; platform_system != "Windows"
+
+# MongoDB dependencies
+motor
+beanie
+pymongo
+email-validator
+
+# JWT authentication
+python-jose[cryptography]
+passlib[bcrypt]
+PyJWT
+
+# Rate limiting
+slowapi
