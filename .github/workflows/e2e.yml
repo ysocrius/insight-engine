@@ -1,0 +1,80 @@
+name: E2E Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+
+    services:
+      mongodb:
+        image: mongo:7.0
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongosh --eval 'db.adminCommand({ping:1})'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Python dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Seed test users
+        run: |
+          python tools/seed_test_users.py
+        env:
+          MONGODB_URL: mongodb://localhost:27017
+          DATABASE_NAME: imip_test
+
+      - name: Start backend
+        run: |
+          uvicorn app.api:app --host 0.0.0.0 --port 8080 &
+          sleep 5
+        env:
+          MONGODB_URL: mongodb://localhost:27017
+          DATABASE_NAME: imip_test
+          ENABLE_PATH_TRANSCRIPTION: "false"
+
+      - name: Install frontend dependencies
+        run: |
+          cd frontend
+          npm ci
+
+      - name: Install Playwright
+        run: |
+          cd frontend
+          npx playwright install --with-deps
+
+      - name: Run E2E tests
+        run: |
+          cd frontend
+          npx playwright test --reporter=list,junit --output=./test-results
+        env:
+          TEST_MEMBER_EMAIL: member@test.com
+          TEST_MEMBER_PASSWORD: member123!@#
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: frontend/test-results
